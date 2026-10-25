@@ -1,0 +1,112 @@
+{
+  "freeTextAnnotations": [],
+  "freeShapeAnnotations": [],
+  "trafficRateAnnotations": [],
+  "groupStyleAnnotations": [],
+  "networkNodeAnnotations": [
+    {
+      "id": "macvlan:enp7s0",
+      "type": "macvlan",
+      "label": "macvlan:enp7s0",
+      "position": {
+        "x": -1180,
+        "y": -180
+      }
+    }
+  ],
+  "nodeAnnotations": [
+    {
+      "id": "spine1",
+      "position": {
+        "x": -1180,
+        "y": 100
+      },
+      "icon": "router",
+      "interfacePattern": "e{n}"
+    },
+    {
+      "id": "spine2",
+      "position": {
+        "x": -940,
+        "y": 100
+      },
+      "icon": "router",
+      "interfacePattern": "e{n}"
+    },
+    {
+      "id": "leaf1",
+      "position": {
+        "x": -1180,
+        "y": 240
+      },
+      "icon": "router",
+      "interfacePattern": "e{n}"
+    },
+    {
+      "id": "leaf2",
+      "position": {
+        "x": -1060,
+        "y": 240
+      },
+      "icon": "router",
+      "interfacePattern": "e{n}"
+    },
+    {
+      "id": "leaf3",
+      "position": {
+        "x": -940,
+        "y": 240
+      },
+      "icon": "router",
+      "interfacePattern": "e{n}"
+    },
+    {
+      "id": "borderleaf1",
+      "position": {
+        "x": -1060,
+        "y": -40
+      },
+      "icon": "router",
+      "interfacePattern": "e{n}"
+    },
+    {
+      "id": "client1",
+      "position": {
+        "x": -1180,
+        "y": 360
+      },
+      "icon": "client",
+      "interfacePattern": "eth{n}"
+    },
+    {
+      "id": "client2",
+      "position": {
+        "x": -1060,
+        "y": 360
+      },
+      "icon": "client",
+      "interfacePattern": "eth{n}"
+    },
+    {
+      "id": "client3",
+      "position": {
+        "x": -940,
+        "y": 360
+      },
+      "icon": "client",
+      "interfacePattern": "eth{n}"
+    },
+    {
+      "id": "inet",
+      "position": {
+        "x": -1060,
+        "y": -180
+      },
+      "icon": "router",
+      "interfacePattern": "e{n}"
+    }
+  ],
+  "edgeAnnotations": [],
+  "aliasEndpointAnnotations": [],
+  "viewerSettings": {}
+}

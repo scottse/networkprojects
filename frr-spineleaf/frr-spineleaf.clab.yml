@@ -1,0 +1,208 @@
+name: frr-spineleaf
+topology:
+  nodes:
+    spine1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.7.1
+      network-mode: none
+      binds:
+        - daemons:/etc/frr/daemons
+        - vtysh.conf:/etc/frr/vtysh.conf
+        - spine1/frr.conf:/etc/frr/frr.conf
+    spine2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.7.1
+      network-mode: none
+      binds:
+        - daemons:/etc/frr/daemons
+        - vtysh.conf:/etc/frr/vtysh.conf
+        - spine2/frr.conf:/etc/frr/frr.conf
+    leaf1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.7.1
+      network-mode: none
+      binds:
+        - daemons:/etc/frr/daemons
+        - vtysh.conf:/etc/frr/vtysh.conf
+        - leaf1/frr.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add dev tenant1 type vrf table 1001
+        - ip link set dev tenant1 up
+        - ip link add br-underlay type bridge vlan_filtering 1
+        - ip link set br-underlay up
+        - ip link add vxlan10000 type vxlan id 10000 local 10.1.255.3 dstport
+          4789 nolearning
+        - ip link set vxlan10000 master br-underlay
+        - bridge vlan add dev vxlan10000 vid 100 pvid untagged
+        - ip link add link br-underlay name vlan100 type vlan id 100
+        - ip link set vlan100 master tenant1
+        - ip link set vxlan10000 up
+        - ip link set vlan100 up
+        - ip link add vxlan10010 type vxlan id 10010 local 10.1.255.3 dstport
+          4789 learning
+        - ip link set vxlan10010 master br-underlay
+        - bridge vlan add dev vxlan10010 vid 10 pvid untagged
+        - ip link add link br-underlay name br-vlan10 type vlan id 10
+        - ip link set br-vlan10 master tenant1
+        - ip addr add 10.1.10.1/24 dev br-vlan10
+        - ip link set vxlan10010 up
+        - ip link set br-vlan10 up
+        - ip link set e3 master br-underlay
+        - bridge vlan add dev e3 vid 10 pvid untagged
+        - bridge vlan add dev br-underlay vid 10 self
+        - bridge vlan add dev br-underlay vid 100 self
+        - ip link set br-vlan10 promisc on
+        - ip link set vlan100 promisc on
+    leaf2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.7.1
+      network-mode: none
+      binds:
+        - daemons:/etc/frr/daemons
+        - vtysh.conf:/etc/frr/vtysh.conf
+        - leaf2/frr.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add dev tenant1 type vrf table 1001
+        - ip link set dev tenant1 up
+        - ip link add br-underlay type bridge vlan_filtering 1
+        - ip link set br-underlay up
+        - ip link add vxlan10000 type vxlan id 10000 local 10.1.255.4 dstport
+          4789 nolearning
+        - ip link set vxlan10000 master br-underlay
+        - bridge vlan add dev vxlan10000 vid 100 pvid untagged
+        - ip link add link br-underlay name vlan100 type vlan id 100
+        - ip link set vlan100 master tenant1
+        - ip link set vxlan10000 up
+        - ip link set vlan100 up
+        - ip link add vxlan10020 type vxlan id 10020 local 10.1.255.4 dstport
+          4789 learning
+        - ip link set vxlan10020 master br-underlay
+        - bridge vlan add dev vxlan10020 vid 20 pvid untagged
+        - ip link add link br-underlay name br-vlan20 type vlan id 20
+        - ip link set br-vlan20 master tenant1
+        - ip addr add 10.1.20.1/24 dev br-vlan20
+        - ip link set vxlan10020 up
+        - ip link set br-vlan20 up
+        - ip link set e3 master br-underlay
+        - bridge vlan add dev e3 vid 20 pvid untagged
+        - bridge vlan add dev br-underlay vid 20 self
+        - bridge vlan add dev br-underlay vid 100 self
+        - ip link set br-vlan20 promisc on
+        - ip link set vlan100 promisc on
+    leaf3:
+      kind: linux
+      image: quay.io/frrouting/frr:10.7.1
+      network-mode: none
+      binds:
+        - daemons:/etc/frr/daemons
+        - vtysh.conf:/etc/frr/vtysh.conf
+        - leaf3/frr.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add dev tenant1 type vrf table 1001
+        - ip link set dev tenant1 up
+        - ip link add br-underlay type bridge vlan_filtering 1
+        - ip link set br-underlay up
+        - ip link add vxlan10000 type vxlan id 10000 local 10.1.255.5 dstport
+          4789 nolearning
+        - ip link set vxlan10000 master br-underlay
+        - bridge vlan add dev vxlan10000 vid 100 pvid untagged
+        - ip link add link br-underlay name vlan100 type vlan id 100
+        - ip link set vlan100 master tenant1
+        - ip link set vxlan10000 up
+        - ip link set vlan100 up
+        - ip link add vxlan10030 type vxlan id 10030 local 10.1.255.5 dstport
+          4789 learning
+        - ip link set vxlan10030 master br-underlay
+        - bridge vlan add dev vxlan10030 vid 30 pvid untagged
+        - ip link add link br-underlay name br-vlan30 type vlan id 30
+        - ip link set br-vlan30 master tenant1
+        - ip addr add 10.1.30.1/24 dev br-vlan30
+        - ip link set vxlan10030 up
+        - ip link set br-vlan30 up
+        - ip link set e3 master br-underlay
+        - bridge vlan add dev e3 vid 30 pvid untagged
+        - bridge vlan add dev br-underlay vid 30 self
+        - bridge vlan add dev br-underlay vid 100 self
+        - ip link set br-vlan30 promisc on
+        - ip link set vlan100 promisc on
+    borderleaf1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.7.1
+      network-mode: none
+      binds:
+        - daemons:/etc/frr/daemons
+        - vtysh.conf:/etc/frr/vtysh.conf
+        - borderleaf1/frr.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add dev tenant1 type vrf table 1001
+        - ip link set dev tenant1 up
+        - ip link add br-underlay type bridge vlan_filtering 1
+        - ip link set br-underlay up
+        - ip link add vxlan10000 type vxlan id 10000 local 10.1.255.6 dstport
+          4789 nolearning
+        - ip link set vxlan10000 master br-underlay
+        - bridge vlan add dev vxlan10000 vid 100 pvid untagged
+        - ip link add link br-underlay name vlan100 type vlan id 100
+        - ip link set vlan100 master tenant1
+        - ip link set vxlan10000 up
+        - ip link set vlan100 up
+        - bridge vlan add dev br-underlay vid 100 self
+        - ip link set vlan100 promisc on
+        - ip link set e3 master tenant1
+        - ip link set e3 up
+    client1:
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool:latest
+      network-mode: none
+      exec:
+        - ip addr add 10.1.10.100/24 dev eth1
+        - ip route del default
+        - ip route add default via 10.1.10.1
+    client2:
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool:latest
+      network-mode: none
+      exec:
+        - ip addr add 10.1.20.100/24 dev eth1
+        - ip route del default
+        - ip route add default via 10.1.20.1
+    client3:
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool:latest
+      network-mode: none
+      exec:
+        - ip addr add 10.1.30.100/24 dev eth1
+        - ip route del default
+        - ip route add default via 10.1.30.1
+    inet:
+      kind: linux
+      image: quay.io/frrouting/frr:10.7.1
+      binds:
+        - daemons:/etc/frr/daemons
+        - vtysh.conf:/etc/frr/vtysh.conf
+        - inet/frr.conf:/etc/frr/frr.conf
+      exec:
+        - apk update
+        - apk add iptables
+        - iptables -t nat -A POSTROUTING -o e1 -j MASQUERADE
+        - ip link set dev eth0 down
+  links:
+    [
+      { endpoints: [ "spine1:e1", "leaf1:e1" ] },
+      { endpoints: [ "spine1:e2", "leaf2:e1" ] },
+      { endpoints: [ "spine1:e3", "leaf3:e1" ] },
+      { endpoints: [ "spine2:e1", "leaf1:e2" ] },
+      { endpoints: [ "spine2:e2", "leaf2:e2" ] },
+      { endpoints: [ "spine2:e3", "leaf3:e2" ] },
+      { endpoints: [ "spine1:e4", "borderleaf1:e1" ] },
+      { endpoints: [ "spine2:e4", "borderleaf1:e2" ] },
+      { endpoints: [ "client1:eth1", "leaf1:e3" ] },
+      { endpoints: [ "client2:eth1", "leaf2:e3" ] },
+      { endpoints: [ "client3:eth1", "leaf3:e3" ] },
+      {
+          type: macvlan,
+          endpoint: { node: "inet", interface: "e1" },
+          host-interface: enp7s0
+        },
+      { endpoints: [ "inet:e2", "borderleaf1:e3" ] }
+    ]
